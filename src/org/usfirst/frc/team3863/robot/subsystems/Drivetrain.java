@@ -92,12 +92,17 @@ public class Drivetrain extends Subsystem {
     
     public void setVelocityTargets(double left, double right) {
     	int multiplier = 600;
-    	if (transmission_in_low) {
-    		multiplier = 200;
+    	double leftScaled = left*multiplier;
+    	double rightScaled = right*multiplier;
+    	if(leftScaled > 180 || rightScaled > 180){
+    		setTransmissionHigh();
     	}
-    	talonLeftA.set(ControlMode.Velocity, left * multiplier);
-    	talonRightA.set(ControlMode.Velocity, right * multiplier);
+    	else
+    		setTransmissionLow();
+    	talonLeftA.set(ControlMode.Velocity, leftScaled);
+    	talonRightA.set(ControlMode.Velocity, rightScaled);
     }
+    
     
     public void setPositionTargetIncrements(double leftOffset, double rightOffset) {
     	double lTarget = talonLeftA.getSelectedSensorPosition(timeout_ms) + leftOffset;
